@@ -7,32 +7,26 @@
  */
 
 function convertToObject(sourceString) {
-  const result = {};
-
   if (!sourceString) {
-    return result;
+    return {};
   }
 
-  const declarations = sourceString.split(';');
-
-  for (const declaration of declarations) {
+  return sourceString.split(';').reduce((stylesObject, declaration) => {
     const trimmed = declaration.trim();
 
     if (trimmed) {
       const colonIndex = trimmed.indexOf(':');
 
-      if (colonIndex === -1) {
-        continue;
+      if (colonIndex !== -1) {
+        const key = trimmed.slice(0, colonIndex).trim();
+        const value = trimmed.slice(colonIndex + 1).trim();
+
+        stylesObject[key] = value;
       }
-
-      const key = trimmed.slice(0, colonIndex).trim();
-      const value = trimmed.slice(colonIndex + 1).trim();
-
-      result[key] = value;
     }
-  }
 
-  return result;
+    return stylesObject;
+  }, {});
 }
 
 module.exports = convertToObject;
